@@ -1,0 +1,313 @@
+[gd_scene load_steps=21 format=3 uid="uid://cbsodkv361udx"]
+
+[ext_resource type="Texture2D" uid="uid://dxk80j838c5mk" path="res://pictures/Screenshot 2025-12-19 201357.png" id="1_akbg1"]
+[ext_resource type="AudioStream" uid="uid://i7iqsr77yn7t" path="res://sound/dingelevator-33694_2.mp3" id="1_qnbhj"]
+[ext_resource type="PackedScene" uid="uid://b36l8gxjyp1k4" path="res://player/node_2d.tscn" id="3_qe26a"]
+[ext_resource type="Texture2D" uid="uid://tol5xhetv0tt" path="res://scene/coridorlevel1s/corridorlevel1now/corridorlevellnowwall.png" id="5_akbg1"]
+[ext_resource type="Texture2D" uid="uid://c6dulbi8cusiu" path="res://pictures/drawer.png" id="5_s5ddf"]
+
+[sub_resource type="GDScript" id="GDScript_akbg1"]
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	AudioTransition.fade_in()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_2aqjb"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="GDScript" id="GDScript_uokct"]
+script/source = "extends Area2D
+
+@onready var label := $door1lable
+var player_in_area := false
+@onready var dingelv: AudioStreamPlayer2D = $\"../dingelv\"
+
+func _ready():
+	label.visible = false
+
+
+func _process(delta):
+	if player_in_area and Input.is_key_pressed(KEY_E):
+		if not dingelv.playing:
+			dingelv.play()
+			SceneTransition.load_scene(\"res://scene/coridorlevel1s/corridorlevel1now/corridorlevel1now.tscn\"
+
+)
+
+
+func _on_body_entered(body):
+	if body.name == \"player\":
+		player_in_area = true
+		label.text = \"PRESS E\"
+		label.visible = true
+
+func _on_body_exited(body):
+	if body.name == \"player\":
+		player_in_area = false
+		label.visible = false
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_akbg1"]
+size = Vector2(30.546265, 48)
+
+[sub_resource type="SystemFont" id="SystemFont_akbg1"]
+font_names = PackedStringArray("BoldPixels")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_1x04g"]
+font = SubResource("SystemFont_akbg1")
+font_size = 9
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.5647059)
+
+[sub_resource type="GDScript" id="GDScript_qnbhj"]
+script/source = "extends Area2D
+
+var player_in_area = false
+@onready var label = $closetlable
+
+func _ready():
+	label.visible = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if player_in_area and event.is_action_pressed(\"ui_accept\"):
+		Dialogic.start(\"closetroom1\")
+
+func _on_body_entered(body):
+	if body.name == \"player\":
+		player_in_area = true
+		label.text = \"PRESS E\"
+		label.visible = true
+
+func _on_body_exited(body):
+	if body.name == \"player\":
+		player_in_area = false
+		label.visible = false
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qe26a"]
+size = Vector2(22.999985, 48)
+
+[sub_resource type="SystemFont" id="SystemFont_d2852"]
+font_names = PackedStringArray("KiwiSoda")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_uokct"]
+font = SubResource("SystemFont_d2852")
+font_size = 9
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.5647059)
+
+[sub_resource type="GDScript" id="GDScript_qe26a"]
+script/source = "extends Area2D
+
+@onready var label := $door1lable
+var player_in_area := false
+@onready var dingelv: AudioStreamPlayer2D = $\"../dingelv\"
+
+func _ready():
+	label.visible = false
+
+
+func _process(delta):
+	if player_in_area and Input.is_key_pressed(KEY_E):
+		if not dingelv.playing:
+			dingelv.play()
+			SceneTransition.load_scene(\"res://scene/elevator/elevator.tscn\"
+)
+
+
+func _on_body_entered(body):
+	if body.name == \"player\":
+		player_in_area = true
+		label.text = \"PRESS E\"
+		label.visible = true
+
+func _on_body_exited(body):
+	if body.name == \"player\":
+		player_in_area = false
+		label.visible = false
+"
+
+[sub_resource type="Gradient" id="Gradient_7mixf"]
+colors = PackedColorArray(0, 0, 0, 1, 0.69803923, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0ctf7"]
+gradient = SubResource("Gradient_7mixf")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.6965812)
+
+[sub_resource type="SystemFont" id="SystemFont_qnbhj"]
+font_names = PackedStringArray("BoldPixels")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_qe26a"]
+font = SubResource("SystemFont_qnbhj")
+font_size = 5
+font_color = Color(1, 1, 1, 0.5882353)
+
+[node name="corridorlevel1now" type="Node2D"]
+texture_filter = 1
+texture_repeat = 1
+script = SubResource("GDScript_akbg1")
+
+[node name="dingelv" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(6, 3)
+stream = ExtResource("1_qnbhj")
+
+[node name="Screenshot20251219201357" type="Sprite2D" parent="."]
+position = Vector2(624, 577)
+scale = Vector2(13.96083, 11)
+texture = ExtResource("1_akbg1")
+
+[node name="player" parent="." instance=ExtResource("3_qe26a")]
+z_index = 222
+position = Vector2(898, 590)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(862, 631)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_2aqjb")
+
+[node name="door1" type="Area2D" parent="."]
+z_index = 2
+position = Vector2(665, 587)
+script = SubResource("GDScript_uokct")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="door1"]
+z_index = 2
+position = Vector2(8.726868, 9)
+shape = SubResource("RectangleShape2D_akbg1")
+
+[node name="door1lable" type="Label" parent="door1"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 31.0
+offset_top = -23.0
+offset_right = 71.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_1x04g")
+
+[node name="closet2" type="Area2D" parent="door1"]
+z_index = 2
+position = Vector2(51, 29)
+script = SubResource("GDScript_qnbhj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="door1/closet2"]
+z_index = 2
+position = Vector2(6, 8)
+shape = SubResource("RectangleShape2D_qe26a")
+
+[node name="closetlable" type="Label" parent="door1/closet2"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -13.0
+offset_top = -38.0
+offset_right = 27.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_uokct")
+
+[node name="elevator" type="Area2D" parent="."]
+z_index = 2
+position = Vector2(943, 591)
+script = SubResource("GDScript_qe26a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="elevator"]
+z_index = 2
+position = Vector2(8.726868, 9)
+shape = SubResource("RectangleShape2D_akbg1")
+
+[node name="door1lable" type="Label" parent="elevator"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -11.0
+offset_top = -45.0
+offset_right = 29.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_1x04g")
+
+[node name="Drawer" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(722, 623)
+scale = Vector2(0.2184, 0.2184)
+texture = ExtResource("5_s5ddf")
+
+[node name="shadow" type="Sprite2D" parent="."]
+modulate = Color(0.0142752165, 0.014275218, 0.014275218, 1)
+z_index = 2
+position = Vector2(723, 643)
+scale = Vector2(1.0000002, 0.11694203)
+texture = SubResource("GradientTexture2D_0ctf7")
+
+[node name="Corridorlevellnowwall" type="Sprite2D" parent="."]
+position = Vector2(876, 600)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("5_akbg1")
+
+[node name="303" type="Label" parent="."]
+offset_left = 654.0
+offset_top = 585.0
+offset_right = 694.0
+offset_bottom = 608.0
+text = "303"
+label_settings = SubResource("LabelSettings_qe26a")
+horizontal_alignment = 1
+
+[node name="304" type="Label" parent="."]
+offset_left = 990.0
+offset_top = 582.0
+offset_right = 1030.0
+offset_bottom = 605.0
+text = "304
+"
+label_settings = SubResource("LabelSettings_qe26a")
+horizontal_alignment = 1
+
+[node name="305" type="Label" parent="."]
+offset_left = 1076.0
+offset_top = 583.0
+offset_right = 1116.0
+offset_bottom = 606.0
+text = "305
+"
+label_settings = SubResource("LabelSettings_qe26a")
+horizontal_alignment = 1
+
+[connection signal="body_entered" from="door1" to="door1" method="_on_body_entered"]
+[connection signal="body_exited" from="door1" to="door1" method="_on_body_exited"]
+[connection signal="body_entered" from="door1/closet2" to="door1/closet2" method="_on_body_entered"]
+[connection signal="body_exited" from="door1/closet2" to="door1/closet2" method="_on_body_exited"]
+[connection signal="body_entered" from="elevator" to="elevator" method="_on_body_entered"]
+[connection signal="body_exited" from="elevator" to="elevator" method="_on_body_exited"]

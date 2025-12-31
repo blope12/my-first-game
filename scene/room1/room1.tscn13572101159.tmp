@@ -1,0 +1,153 @@
+[gd_scene load_steps=13 format=3 uid="uid://x2vxx8nj268"]
+
+[ext_resource type="PackedScene" uid="uid://b36l8gxjyp1k4" path="res://player/node_2d.tscn" id="1_78t7k"]
+[ext_resource type="AudioStream" uid="uid://dmwxcf1bqe8n5" path="res://scene/room1/night-atmosphere-with-crickets-374652.mp3" id="1_xo1ai"]
+[ext_resource type="Texture2D" uid="uid://bfoicmjkcr8fi" path="res://pictures/2d_lights_and_shadows_neutral_point_light.webp" id="2_s48hg"]
+[ext_resource type="Script" uid="uid://clw4v86xmh2f8" path="res://scene/room1/point_light_2d.gd" id="3_0xss4"]
+[ext_resource type="Texture2D" uid="uid://dxk80j838c5mk" path="res://pictures/Screenshot 2025-12-19 201357.png" id="4_2nmro"]
+[ext_resource type="Texture2D" uid="uid://bn85e01vomdbq" path="res://scene/room1/room1.png" id="8_xo1ai"]
+
+[sub_resource type="GDScript" id="GDScript_xo1ai"]
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	AudioTransition.fade_in()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_80nbo"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="GDScript" id="GDScript_wa7oi"]
+script/source = "extends Area2D
+
+var player_in_area = false
+@onready var label = $closetlable
+var dialogue_resource = preload(\"res://scene/room1/closet.dialogue\")
+
+func _ready():
+	label.visible = false
+
+func _unhandled_input(event: InputEvent) -> void:
+	if player_in_area and event.is_action_pressed(\"ui_accept\"):
+		DialogueManager.show_dialogue_balloon(dialogue_resource, \"start\")
+
+func _on_body_entered(body):
+	if body.name == \"player\":
+		player_in_area = true
+		label.text = \"PRESS E\"
+		label.visible = true
+
+func _on_body_exited(body):
+	if body.name == \"player\":
+		player_in_area = false
+		label.visible = false
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qpgjy"]
+size = Vector2(22.999985, 48)
+
+[sub_resource type="SystemFont" id="SystemFont_d2852"]
+font_names = PackedStringArray("KiwiSoda")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_0oeh8"]
+font = SubResource("SystemFont_d2852")
+font_size = 9
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.5647059)
+
+[node name="Node2D" type="Node2D"]
+texture_filter = 1
+script = SubResource("GDScript_xo1ai")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(124, 548)
+stream = ExtResource("1_xo1ai")
+autoplay = true
+attenuation = 0.10085544
+panning_strength = 0.0
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+position = Vector2(124, 548)
+color = Color(0.19076231, 0.19076234, 0.19076231, 1)
+shadow_enabled = true
+texture = ExtResource("2_s48hg")
+texture_scale = 0.81
+script = ExtResource("3_0xss4")
+
+[node name="player" parent="." instance=ExtResource("1_78t7k")]
+z_index = 22
+position = Vector2(1259, 570.00006)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(992.675, 611.35)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_80nbo")
+
+[node name="Screenshot20251219201357" type="Sprite2D" parent="."]
+position = Vector2(624, 577)
+scale = Vector2(13.96083, 11)
+texture = ExtResource("4_2nmro")
+
+[node name="Room1" type="Sprite2D" parent="."]
+position = Vector2(1138, 563)
+scale = Vector2(0.133, 0.133)
+texture = ExtResource("8_xo1ai")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(1260.175, 587)
+rotation = -1.5550884
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_80nbo")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(1078.65, 552)
+rotation = 1.5550884
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_80nbo")
+
+[node name="closet" type="Area2D" parent="."]
+z_index = 2
+position = Vector2(1103, 590)
+script = SubResource("GDScript_wa7oi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="closet"]
+z_index = 2
+position = Vector2(6, 8)
+shape = SubResource("RectangleShape2D_qpgjy")
+
+[node name="closetlable" type="Label" parent="closet"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -13.0
+offset_top = -38.0
+offset_right = 27.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_0oeh8")
+
+[connection signal="body_entered" from="closet" to="closet" method="_on_body_entered"]
+[connection signal="body_exited" from="closet" to="closet" method="_on_body_exited"]

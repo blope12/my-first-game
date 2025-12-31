@@ -1,0 +1,233 @@
+[gd_scene load_steps=19 format=3 uid="uid://cdivg5nvrbbpw"]
+
+[ext_resource type="PackedScene" uid="uid://b36l8gxjyp1k4" path="res://player/node_2d.tscn" id="1_775hr"]
+[ext_resource type="Texture2D" uid="uid://dcff6g32atieu" path="res://scene/lobby/lobby/lobby.png" id="1_lqkm3"]
+[ext_resource type="Texture2D" uid="uid://dxk80j838c5mk" path="res://pictures/Screenshot 2025-12-19 201357.png" id="1_w48y1"]
+[ext_resource type="Texture2D" uid="uid://bfoicmjkcr8fi" path="res://pictures/2d_lights_and_shadows_neutral_point_light.webp" id="3_64ees"]
+[ext_resource type="Script" uid="uid://clw4v86xmh2f8" path="res://scene/room1/point_light_2d.gd" id="4_eh1g6"]
+[ext_resource type="AudioStream" uid="uid://i7iqsr77yn7t" path="res://sound/dingelevator-33694_2.mp3" id="6_eh1g6"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_w48y1"]
+diffuse_texture = ExtResource("1_lqkm3")
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_w48y1"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_o6y8w"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_64ees"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="GDScript" id="GDScript_64ees"]
+script/source = "extends Area2D
+
+@onready var label := $door1lable
+var player_in_area := false
+@onready var dingelv: AudioStreamPlayer2D = $\"../dingelv\"
+
+func _ready():
+	label.visible = false
+
+func _process(delta):
+	if player_in_area and Input.is_action_just_pressed(\"ui_accept\"):
+
+		# قفل آسانسور تا دیالوگ تموم نشه
+		if not SaveManager.save_data[\"lobbyman_dialog_done\"]:
+			label.text = \"TALK FIRST\"
+			return
+
+		if not dingelv.playing:
+			dingelv.play()
+			SceneTransition.load_scene(\"res://scene/elevator/elevator.tscn\")
+
+func _on_body_entered(body):
+	if body.name == \"player\":
+		player_in_area = true
+
+		if SaveManager.save_data[\"lobbyman_dialog_done\"]:
+			label.text = \"PRESS E\"
+		else:
+			label.text = \"TALK FIRST\"
+
+		label.visible = true
+
+func _on_body_exited(body):
+	if body.name == \"player\":
+		player_in_area = false
+		label.visible = false
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eh1g6"]
+size = Vector2(30.546265, 48)
+
+[sub_resource type="SystemFont" id="SystemFont_akbg1"]
+font_names = PackedStringArray("BoldPixels")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_23234"]
+font = SubResource("SystemFont_akbg1")
+font_size = 9
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.5647059)
+
+[sub_resource type="GDScript" id="GDScript_eh1g6"]
+script/source = "extends Area2D
+
+@onready var label = $talk
+var player_in_area := false
+
+var dialogs = [
+	\"lobbyman-and-sara\",
+	\"lobbyman-else\"
+]
+
+func _ready() -> void:
+	label.visible = false
+
+func _process(delta):
+	if player_in_area and Input.is_action_just_pressed(\"ui_accept\"):
+		if not SaveManager.save_data[\"lobbyman_dialog_done\"]:
+			Dialogic.start(dialogs[0])
+			SaveManager.save_data[\"lobbyman_dialog_done\"] = true
+			SaveManager.save_game()
+		else:
+			Dialogic.start(dialogs[1])
+
+func _on_body_entered(body: Node2D) -> void:
+	if body.name == \"player\":
+		player_in_area = true
+		label.text = \"talk\"
+		label.visible = true
+
+func _on_body_exited(body: Node2D) -> void:
+	if body.name == \"player\":
+		player_in_area = false
+		label.visible = false
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_23234"]
+
+[sub_resource type="SystemFont" id="SystemFont_eh1g6"]
+font_names = PackedStringArray("BoldPixels")
+subpixel_positioning = 0
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_4ule5"]
+font = SubResource("SystemFont_eh1g6")
+font_size = 9
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.5647059)
+
+[node name="lobby" type="Node2D"]
+
+[node name="Screenshot20251219201357" type="Sprite2D" parent="."]
+position = Vector2(624, 577)
+scale = Vector2(13.96083, 11)
+texture = ExtResource("1_w48y1")
+
+[node name="Lobby" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.78039217)
+position = Vector2(913, 661.00006)
+scale = Vector2(0.165, 0.165)
+texture = SubResource("CanvasTexture_w48y1")
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+self_modulate = Color(0.17727292, 0.18025208, 1, 1)
+z_index = 22
+position = Vector2(1065, 650)
+scale = Vector2(0.46, 0.46)
+color = Color(0.578125, 0.56832623, 0.5389301, 1)
+shadow_enabled = true
+texture = ExtResource("3_64ees")
+texture_scale = 1.15
+script = ExtResource("4_eh1g6")
+
+[node name="player" parent="." instance=ExtResource("1_775hr")]
+z_index = 6
+position = Vector2(987, 639)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(922, 683)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_w48y1")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(690, 643)
+rotation = 1.5550884
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_o6y8w")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(1123, 616)
+rotation = -1.5550884
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_64ees")
+
+[node name="elevator" type="Area2D" parent="."]
+z_index = 2
+position = Vector2(727, 657)
+script = SubResource("GDScript_64ees")
+
+[node name="ee" type="CollisionShape2D" parent="elevator"]
+z_index = 2
+position = Vector2(8.726868, 9)
+shape = SubResource("RectangleShape2D_eh1g6")
+
+[node name="door1lable" type="Label" parent="elevator"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -11.0
+offset_top = -45.0
+offset_right = 29.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_23234")
+
+[node name="dingelv" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(6, 3)
+stream = ExtResource("6_eh1g6")
+
+[node name="dilago-lobbyman" type="Area2D" parent="."]
+position = Vector2(1025, 682)
+script = SubResource("GDScript_eh1g6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="dilago-lobbyman"]
+shape = SubResource("RectangleShape2D_23234")
+
+[node name="talk" type="Label" parent="dilago-lobbyman"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 8.0
+offset_top = -51.0
+offset_right = 48.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_4ule5")
+
+[connection signal="body_entered" from="elevator" to="elevator" method="_on_body_entered"]
+[connection signal="body_exited" from="elevator" to="elevator" method="_on_body_exited"]
+[connection signal="body_entered" from="dilago-lobbyman" to="dilago-lobbyman" method="_on_body_entered"]
+[connection signal="body_exited" from="dilago-lobbyman" to="dilago-lobbyman" method="_on_body_exited"]

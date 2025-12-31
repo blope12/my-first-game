@@ -1,0 +1,201 @@
+[gd_scene load_steps=18 format=3 uid="uid://ba7ac5dhjbvwd"]
+
+[ext_resource type="Script" uid="uid://dfr0r0hghs7e5" path="res://scene/manemenu/manemenu.gd" id="1_e1hvd"]
+[ext_resource type="Shader" uid="uid://7dvl8dep26ud" path="res://scene/manemenu/manemenu.gdshader" id="1_pdftg"]
+[ext_resource type="AudioStream" uid="uid://dngnc6k8c1yn8" path="res://scene/manemenu/mixkit-calm-thunderstorm-in-the-jungle-2415.wav" id="1_r3dqu"]
+[ext_resource type="Texture2D" uid="uid://1k4gq27btx1c" path="res://scene/manemenu/download.png" id="2_b3gpy"]
+[ext_resource type="Texture2D" uid="uid://ne6nk6qnm8k0" path="res://scene/manemenu/00.png" id="5_athqh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pdftg"]
+shader = ExtResource("1_pdftg")
+shader_parameter/alpha = 0.61
+shader_parameter/inner_radius = 0.485
+shader_parameter/outer_radius = 0.965
+
+[sub_resource type="Gradient" id="Gradient_b3gpy"]
+offsets = PackedFloat32Array(0, 0.58474576)
+colors = PackedColorArray(0, 0, 0, 0.7176471, 1, 1, 1, 0.50980395)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_r3dqu"]
+gradient = SubResource("Gradient_b3gpy")
+
+[sub_resource type="Curve" id="Curve_pdftg"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_athqh"]
+_limits = [0.0, 30.0, 0.0, 1.0]
+_data = [Vector2(0, 16.654749), 0.0, 0.0, 0, 0, Vector2(0.08947368, 22.829418), 95.31266, 95.31266, 0, 0, Vector2(0.23947367, 30), 0.0, 0.0, 0, 0, Vector2(1, 30), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_iqe28"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_2qtk6"]
+curve_x = SubResource("Curve_pdftg")
+curve_y = SubResource("Curve_athqh")
+curve_z = SubResource("Curve_iqe28")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_iqe28"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1000, 1, 1)
+angle_min = 5.000011
+angle_max = 11.0000105
+inherit_velocity_ratio = -0.24
+gravity = Vector3(0, 1000, 0)
+scale_over_velocity_curve = SubResource("CurveXYZTexture_2qtk6")
+color_initial_ramp = SubResource("GradientTexture1D_r3dqu")
+
+[sub_resource type="SystemFont" id="SystemFont_kb1t7"]
+font_names = PackedStringArray("BoldPixels")
+
+[sub_resource type="Animation" id="Animation_iqe28"]
+resource_name = "movingpointer"
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/arrow:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 2, 0),
+"points": PackedFloat32Array(803.14, -0.25, 0, 0.25, 0, 818.1, -0.083333336, -2.493327, 0, 0, 803.14, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5, 1)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimationPlayer/arrow:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 2, 0),
+"points": PackedFloat32Array(607, -0.25, 0, 0.25, 0, 607, -0.083333336, 0, 0, 0, 607, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 0.5, 1)
+}
+
+[sub_resource type="Animation" id="Animation_2qtk6"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/arrow:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(803.14, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimationPlayer/arrow:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(607, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vcsb6"]
+_data = {
+&"RESET": SubResource("Animation_2qtk6"),
+&"movingpointer": SubResource("Animation_iqe28")
+}
+
+[node name="manemenu" type="Node2D"]
+z_index = 22
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = 22
+material = SubResource("ShaderMaterial_pdftg")
+offset_left = -50.0
+offset_top = -37.0
+offset_right = 1959.0
+offset_bottom = 1118.0
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("1_r3dqu")
+autoplay = true
+attenuation = 0.10085544
+panning_strength = 0.0
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+z_index = 22
+position = Vector2(940, -47)
+amount = 5000
+lifetime = 7.529999999999999
+process_material = SubResource("ParticleProcessMaterial_iqe28")
+
+[node name="btnmanger" type="Control" parent="."]
+z_index = 22
+layout_mode = 3
+anchors_preset = 0
+offset_left = -32.0
+offset_top = -31.0
+offset_right = 8.0
+offset_bottom = 9.0
+mouse_filter = 2
+script = ExtResource("1_e1hvd")
+
+[node name="start" type="Button" parent="."]
+z_index = 22
+offset_left = 843.0
+offset_top = 520.0
+offset_right = 1103.0
+offset_bottom = 692.0
+theme_override_fonts/font = SubResource("SystemFont_kb1t7")
+theme_override_font_sizes/font_size = 70
+text = "start"
+flat = true
+
+[node name="start2" type="Button" parent="."]
+z_index = 22
+offset_left = 843.0
+offset_top = 660.0
+offset_right = 1103.0
+offset_bottom = 832.0
+theme_override_fonts/font = SubResource("SystemFont_kb1t7")
+theme_override_font_sizes/font_size = 70
+text = "setting"
+flat = true
+
+[node name="start3" type="Button" parent="."]
+z_index = 22
+offset_left = 843.0
+offset_top = 782.0
+offset_right = 1103.0
+offset_bottom = 954.0
+theme_override_fonts/font = SubResource("SystemFont_kb1t7")
+theme_override_font_sizes/font_size = 70
+text = "exit"
+flat = true
+
+[node name="bg" type="Sprite2D" parent="."]
+position = Vector2(965.99976, 550.00006)
+scale = Vector2(2.672554, 2.731884)
+texture = ExtResource("2_b3gpy")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_vcsb6")
+}
+
+[node name="arrow" type="Sprite2D" parent="AnimationPlayer"]
+visible = false
+z_index = 22
+position = Vector2(803.14, 607)
+scale = Vector2(3.5, 3.5)
+texture = ExtResource("5_athqh")
+hframes = 20
+vframes = 10
+frame = 2
+
+[connection signal="mouse_entered" from="start" to="btnmanger" method="_on_start_mouse_entered"]
+[connection signal="pressed" from="start" to="btnmanger" method="_on_start_pressed"]

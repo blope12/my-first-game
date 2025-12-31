@@ -1,0 +1,129 @@
+[gd_scene load_steps=13 format=3 uid="uid://cswajybst1p2j"]
+
+[ext_resource type="Texture2D" uid="uid://dxk80j838c5mk" path="res://pictures/Screenshot 2025-12-19 201357.png" id="1_d2852"]
+[ext_resource type="PackedScene" uid="uid://b36l8gxjyp1k4" path="res://player/node_2d.tscn" id="3_0ctf7"]
+[ext_resource type="Texture2D" uid="uid://bwptbmljxorhx" path="res://pictures/pot.png" id="4_1x04g"]
+[ext_resource type="Texture2D" uid="uid://c6dulbi8cusiu" path="res://pictures/drawer.png" id="5_0ctf7"]
+[ext_resource type="Texture2D" uid="uid://b0k8c1bkwjdrf" path="res://scene/coridorlevel1s/corridorlevel1past/corridorlevellpastwall.png.png" id="5_dy6fy"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_2aqjb"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="GDScript" id="GDScript_d2852"]
+script/source = "extends Area2D
+
+@onready var label := $door1lable
+var player_in_area := false
+
+func _ready():
+	label.visible = false
+
+func _process(delta):
+	if player_in_area and Input.is_key_pressed(KEY_E):
+		SceneTransition.load_scene(\"res://scene/scene-room1/room1.tscn\")
+
+
+func _on_body_entered(body):
+	if body.name == \"player\":
+		player_in_area = true
+		label.text = \"PRESS E\"
+		label.visible = true
+
+func _on_body_exited(body):
+	if body.name == \"player\":
+		player_in_area = false
+		label.visible = false
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d2852"]
+size = Vector2(35.092514, 70)
+
+[sub_resource type="SystemFont" id="SystemFont_d2852"]
+font_names = PackedStringArray("KiwiSoda")
+multichannel_signed_distance_field = true
+
+[sub_resource type="LabelSettings" id="LabelSettings_1x04g"]
+font = SubResource("SystemFont_d2852")
+font_size = 9
+shadow_size = 5
+shadow_color = Color(0, 0, 0, 0.5647059)
+
+[sub_resource type="Gradient" id="Gradient_7mixf"]
+colors = PackedColorArray(0, 0, 0, 1, 0.69803923, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0ctf7"]
+gradient = SubResource("Gradient_7mixf")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.6965812)
+
+[node name="corridorlevel1past" type="Node2D"]
+
+[node name="Screenshot20251219201357" type="Sprite2D" parent="."]
+position = Vector2(624, 577)
+scale = Vector2(13.96083, 11)
+texture = ExtResource("1_d2852")
+
+[node name="player" parent="." instance=ExtResource("3_0ctf7")]
+z_index = 222
+position = Vector2(541.99994, 562.99994)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(862, 631)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_2aqjb")
+
+[node name="door1" type="Area2D" parent="."]
+z_index = 2
+position = Vector2(668, 577)
+script = SubResource("GDScript_d2852")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="door1"]
+position = Vector2(3.4537354, 23)
+shape = SubResource("RectangleShape2D_d2852")
+
+[node name="door1lable" type="Label" parent="door1"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 27.0
+offset_top = -10.0
+offset_right = 67.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_1x04g")
+
+[node name="pot" type="Sprite2D" parent="."]
+z_index = 8
+position = Vector2(724, 602)
+scale = Vector2(0.035, 0.035)
+texture = ExtResource("4_1x04g")
+
+[node name="Drawer" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(722, 623)
+scale = Vector2(0.2184, 0.2184)
+texture = ExtResource("5_0ctf7")
+
+[node name="shadow" type="Sprite2D" parent="."]
+modulate = Color(0.0142752165, 0.014275218, 0.014275218, 1)
+z_index = 2
+position = Vector2(723, 643)
+scale = Vector2(1.0000002, 0.11694203)
+texture = SubResource("GradientTexture2D_0ctf7")
+
+[node name="Corridorlevellpastwall_png" type="Sprite2D" parent="."]
+position = Vector2(876, 600)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("5_dy6fy")
+
+[connection signal="body_entered" from="door1" to="door1" method="_on_body_entered"]
+[connection signal="body_exited" from="door1" to="door1" method="_on_body_exited"]

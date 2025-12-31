@@ -1,0 +1,166 @@
+[gd_scene load_steps=9 format=3 uid="uid://cr8uhpl645hr3"]
+
+[ext_resource type="Texture2D" uid="uid://fnebyt7ebeuv" path="res://scene/cursceneintrogame/_Image 16 (1).png" id="1_nyhfp"]
+[ext_resource type="Texture2D" uid="uid://d2i4j7j1tur36" path="res://scene/manemenu/photo_2025-12-28_15-12-23.jpg" id="1_sy8ml"]
+[ext_resource type="Texture2D" uid="uid://dxk80j838c5mk" path="res://pictures/Screenshot 2025-12-19 201357.png" id="2_m0l3u"]
+[ext_resource type="AudioStream" uid="uid://7ip3vbfiasb5" path="res://scene/cursceneintrogame/rain-with-thunderstorm-420333.mp3" id="4_sy8ml"]
+
+[sub_resource type="GDScript" id="GDScript_4bafq"]
+script/source = "extends Node2D
+
+@onready var anim = $transition
+var current_timeline := \"\"
+
+func _ready() -> void:
+	AudioTransition.fade_in()
+	Dialogic.timeline_ended.connect(Callable(self, \"_on_timeline_ended\"))
+	current_timeline = \"talking-story-intro\"
+	Dialogic.start(current_timeline)
+
+func _on_timeline_ended() -> void:
+	if current_timeline == \"talking-story-intro\":
+		# وقتی Timeline اول تموم شد، انیمیشن پلی می‌شه و منتظر می‌شیم تموم بشه
+		anim.play(\"movie\")
+		await anim.animation_finished
+		# بعد Timeline دوم شروع می‌شه
+		current_timeline = \"talking-story-intro2\"
+		Dialogic.start(current_timeline)
+	elif current_timeline == \"talking-story-intro2\":
+		# وقتی Timeline دوم تموم شد، برو به Lobby
+		SceneTransition.load_scene(\"res://scene/lobby/lobby/lobby.tscn\")
+"
+
+[sub_resource type="Animation" id="Animation_sy8ml"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("street:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("street:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("street:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("street:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0.99607843, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_4bafq"]
+resource_name = "movie"
+length = 2.0
+step = 1.0
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("street:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.16666667, 0, 0, 0),
+"times": PackedFloat32Array(0, 2)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("street:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.16666667, 0, 0, 0),
+"times": PackedFloat32Array(0, 2)
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("street:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(1, -0.25, 0, 0.25, 0, 1, -0.16666667, 0, 0, 0),
+"times": PackedFloat32Array(0, 2)
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("street:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0.99607843, -0.25, 0, 0.25, 0, 0, -0.16666667, 0.16601308, 0, 0),
+"times": PackedFloat32Array(0, 2)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_o3heo"]
+_data = {
+&"RESET": SubResource("Animation_sy8ml"),
+&"movie": SubResource("Animation_4bafq")
+}
+
+[node name="introcutscene" type="Node2D"]
+script = SubResource("GDScript_4bafq")
+
+[node name="hotel" type="Sprite2D" parent="."]
+position = Vector2(932.99994, 592)
+scale = Vector2(0.905, 0.905)
+texture = ExtResource("1_sy8ml")
+
+[node name="street" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.99607843)
+position = Vector2(964, 529)
+scale = Vector2(0.74, 0.74)
+texture = ExtResource("1_nyhfp")
+
+[node name="Screenshot20251219201357" type="Sprite2D" parent="."]
+position = Vector2(1070.0001, -437.24988)
+scale = Vector2(11.7350235, 9.379461)
+texture = ExtResource("2_m0l3u")
+
+[node name="Screenshot20251219201357" type="Sprite2D" parent="Screenshot20251219201357"]
+position = Vector2(904.7276, 675.1201)
+scale = Vector2(11.7350235, 9.294642)
+texture = ExtResource("2_m0l3u")
+
+[node name="transition" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_o3heo")
+}
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_sy8ml")
+autoplay = true

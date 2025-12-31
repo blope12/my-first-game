@@ -1,0 +1,249 @@
+[gd_scene load_steps=20 format=3 uid="uid://bougy8mi2qew3"]
+
+[ext_resource type="Texture2D" uid="uid://c2n3d7mrgv0bf" path="res://scene/elevator/elevator.png" id="1_bd2ix"]
+[ext_resource type="Texture2D" uid="uid://dxk80j838c5mk" path="res://pictures/Screenshot 2025-12-19 201357.png" id="1_tpscd"]
+[ext_resource type="Texture2D" uid="uid://dtpm2dh8pwgyu" path="res://pictures/tight-focused.png" id="1_ullda"]
+[ext_resource type="AudioStream" uid="uid://ce8jewee2eyua" path="res://scene/elevator/freight-elevator-33694_1.mp3" id="2_3p1d8"]
+[ext_resource type="PackedScene" uid="uid://b36l8gxjyp1k4" path="res://player/node_2d.tscn" id="2_kym4f"]
+[ext_resource type="Texture2D" uid="uid://b0dwk2vrfjipt" path="res://pictures/btn/1-Key.png" id="6_uv5cf"]
+[ext_resource type="AudioStream" uid="uid://i7iqsr77yn7t" path="res://sound/dingelevator-33694_2.mp3" id="7_0bmpv"]
+[ext_resource type="Texture2D" uid="uid://dt7pdefj5g5wv" path="res://pictures/btn/2-Key.png" id="8_58bx8"]
+[ext_resource type="Texture2D" uid="uid://dgfuuscxx3lws" path="res://pictures/tiles/3-Key.png" id="9_kkvu0"]
+
+[sub_resource type="GDScript" id="GDScript_3p1d8"]
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	AudioTransition.fade_in()
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_pressed_3() -> void:
+	pass # Replace with function body.
+"
+
+[sub_resource type="Animation" id="Animation_0bmpv"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(1.03, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_uv5cf"]
+resource_name = "lightfliker"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:energy")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0),
+"points": PackedFloat32Array(1.73, 0, 0, 0, 0, 0.73, 0, 0, 0, 0, 1.73, 0, 0, 0, 0, 0.73, 0, 0, 0, 0, 1.73, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 1.53, 0, 0, 0, 0, 0.12, 0, 0, 0, 0, 1.53, 0, 0, 0, 0),
+"times": PackedFloat32Array(0.8269898, 0.93333334, 1.0333335, 1.1333334, 2.2666667, 3.5333333, 3.6000001, 3.7, 3.7740026)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q66yh"]
+_data = {
+&"RESET": SubResource("Animation_0bmpv"),
+&"lightfliker": SubResource("Animation_uv5cf")
+}
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_0bmpv"]
+diffuse_texture = ExtResource("1_bd2ix")
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_3p1d8"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_bd2ix"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_tpscd"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kym4f"]
+normal = Vector2(0, -7.95)
+distance = -0.30462205
+
+[sub_resource type="GDScript" id="GDScript_0bmpv"]
+script/source = "extends Control
+
+@onready var press_2: AudioStreamPlayer2D = $press2
+var is_busy: bool = false  # anti-spam lock
+
+func _handle_press() -> void:
+	if is_busy:
+		return
+	is_busy = true
+	
+	press_2.play()
+	await press_2.finished
+	
+	AudioTransition.fade_out()
+	SceneTransition.load_scene(\"res://scene/coridorlevel1s/corridorlevel1now/corridorlevel1now.tscn\")
+
+func _on_pressed() -> void:
+	_handle_press()
+
+func _on_pressed_2() -> void:
+	_handle_press()
+
+func _on_pressed_3() -> void:
+	_handle_press()
+"
+
+[node name="elevator" type="Node2D"]
+position = Vector2(12, 5)
+script = SubResource("GDScript_3p1d8")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(813, 614)
+color = Color(0.5764706, 0.5764706, 0.5254902, 0.85490197)
+energy = 1.03
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 1)
+shadow_filter = 2
+shadow_filter_smooth = 3.1
+texture = ExtResource("1_ullda")
+offset = Vector2(0, -11.065)
+texture_scale = 0.34
+height = 920.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="PointLight2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_q66yh")
+}
+autoplay = "lightfliker"
+
+[node name="elevatorsound" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(624, 577)
+scale = Vector2(13.96083, 11)
+stream = ExtResource("2_3p1d8")
+autoplay = true
+panning_strength = 1.84
+parameters/looping = false
+
+[node name="Screenshot20251219201357" type="Sprite2D" parent="."]
+position = Vector2(672, 623)
+scale = Vector2(13.96083, 11)
+texture = ExtResource("1_tpscd")
+
+[node name="Elevator" type="Sprite2D" parent="."]
+modulate = Color(0.66796875, 0.66796875, 0.66796875, 1)
+position = Vector2(813, 611)
+scale = Vector2(0.155, 0.155)
+texture = SubResource("CanvasTexture_0bmpv")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(809, 513)
+occluder = SubResource("OccluderPolygon2D_3p1d8")
+
+[node name="player" parent="." instance=ExtResource("2_kym4f")]
+z_index = 22
+position = Vector2(819, 624)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(836, 662)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_bd2ix")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(788.99994, 629)
+rotation = 1.5550884
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_tpscd")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+z_index = 111
+position = Vector2(837.99994, 597)
+rotation = -1.5550884
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(23, 17)
+shape = SubResource("WorldBoundaryShape2D_kym4f")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = SubResource("GDScript_0bmpv")
+
+[node name="1" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 892.0
+offset_top = 569.0
+offset_right = 900.0
+offset_bottom = 577.0
+scale = Vector2(1.885, 1.885)
+focus_mode = 0
+
+[node name="2" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 892.00006
+offset_top = 592.0
+offset_right = 900.00006
+offset_bottom = 600.0
+scale = Vector2(1.885, 1.885)
+focus_mode = 0
+
+[node name="3" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 891.0
+offset_top = 614.0
+offset_right = 899.0
+offset_bottom = 622.0
+scale = Vector2(1.885, 1.885)
+focus_mode = 0
+
+[node name="press2" type="AudioStreamPlayer2D" parent="Control"]
+position = Vector2(882, 600)
+scale = Vector2(2.86, 2.86)
+stream = ExtResource("7_0bmpv")
+
+[node name="Sprite2D" type="Sprite2D" parent="Control"]
+position = Vector2(899.00006, 575.00006)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("6_uv5cf")
+hframes = 2
+frame = 1
+
+[node name="Sprite2D2" type="Sprite2D" parent="Control"]
+position = Vector2(899.00006, 598)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("8_58bx8")
+hframes = 2
+frame = 1
+
+[node name="Sprite2D3" type="Sprite2D" parent="Control"]
+position = Vector2(899, 620)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("9_kkvu0")
+hframes = 2
+frame = 1
+
+[connection signal="pressed" from="Control/1" to="Control" method="_on_pressed"]
+[connection signal="pressed" from="Control/2" to="Control" method="_on_pressed_2"]
+[connection signal="pressed" from="Control/3" to="Control" method="_on_pressed_3"]

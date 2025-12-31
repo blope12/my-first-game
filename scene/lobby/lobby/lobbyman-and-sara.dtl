@@ -1,0 +1,29 @@
+join lobbyman right
+lobbyman: Welcome to Hotel Arca. You’re late. Though here, lateness has little meaning.
+
+join Elara left
+Elara: I’m not after time. I just need a bed that stays put and a door that locks. One night.
+
+join lobbyman right
+lobbyman: One night. Few survive that without noticing… things.
+lobbyman: Your ID, please. I need to know you still belong to the present.
+
+join Elara left
+Elara: (hands card) Present. And can we leave the warnings for later? I’m too tired to fear.
+
+join lobbyman right
+lobbyman: Fatigue is dangerous. It sharpens the senses of what isn’t here… and dulls what is.
+[wait time="0.8"]
+lobbyman: Take the lift to the third floor. If the doors open and you feel… out of step… do not exit.
+
+join lobbyman right
+lobbyman: Room 303.
+
+[wait time="1.0"]
+join Elara left
+Elara: 303. That’s it? Or is the “Do Not Disturb” sign… more than polite?
+
+join lobbyman right
+lobbyman: If you hear a presence where there should be none… ignore it.
+lobbyman: The past lingers here. It tests those who arrive unprepared.
+lobbyman: Sleep well, Miss. Or at least… sleep.
